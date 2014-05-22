@@ -1,28 +1,34 @@
 #include "theaplication.h"
+#include <QFile>
+#include <QCoreApplication>
 
 TheAplication::TheAplication(QObject *parent) :
     QObject(parent)
 {
-    this->server_p = new QMLServer(this);
+    this->server_p = QMLServer::getInstance();
 
     this->messageHandler_p = new MessageHandler(this->server_p, this);
 
-    connect(this->server_p, SIGNAL(newQMLCodeRequest()), this, SLOT(QMLCodeRequest()));
-    //connect(this->server_p, SIGNAL(newEventMessage(QString)), this, SLOT(newEventMessage(QString)));
+//    connect(this->server_p, SIGNAL(newQMLCodeRequest()), this, SLOT(QMLCodeRequest()));
 
+    this->messageHandler_p->registerEvent("QMLRequest", this->QMLCodeRequest);
     this->messageHandler_p->registerEvent("newMessage", this->newMessage);
 
-    this->server_p->listen(QHostAddress::Any, 3210);
+    QMLServer::getInstance()->listen(QHostAddress::Any, 3210);
 }
 
-void TheAplication::QMLCodeRequest()
+void TheAplication::QMLCodeRequest(const QVariant &message)
 {
-    this->server_p->sendQMLCode("import QtQuick 2.0; import QtQuick.Controls 1.1;  Button { text: 'This is just a test'; onClicked: { console.log('Test!'); client.emitSignal('newMessage', 'Works!');} }");
-}
+    QFile file(QCoreApplication::applicationDirPath() + "/qml/" + message.toString() + ".qml");
 
-void TheAplication::newEventMessage(const QString &message)
-{
-    //qDebug() << message;
+    if(!file.open(QIODevice::ReadOnly))
+        return;
+
+    QString dataRead = file.readAll();
+
+    QMLServer::getInstance()->sendQMLCode(dataRead.replace("\"", "'"));
+
+    file.close();
 }
 
 void TheAplication::newMessage(const QVariant &message)

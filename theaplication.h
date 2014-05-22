@@ -15,13 +15,12 @@ private:
 
 public:
     explicit TheAplication(QObject *parent = 0);
-    static void newMessage(const QVariant &message);
 
 signals:
 
 private slots:
-    void QMLCodeRequest();
-    void newEventMessage(const QString &message);
+    static void QMLCodeRequest(const QVariant &message);
+    static void newMessage(const QVariant &message);
 
 
 public slots:

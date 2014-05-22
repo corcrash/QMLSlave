@@ -3,13 +3,14 @@
 MessageHandler::MessageHandler(QObject *parent) :
     QObject(parent)
 {
+    this->server = QMLServer::getInstance();
     connect(this->server, SIGNAL(newEventMessage(QString,QVariant)), this, SLOT(handleNewEvent(QString,QVariant)));
 }
 
 MessageHandler::MessageHandler(QMLServer *server, QObject *parent) :
     QObject(parent)
 {
-    this->server = server;
+    this->server = QMLServer::getInstance();
     connect(this->server, SIGNAL(newEventMessage(QString,QVariant)), this, SLOT(handleNewEvent(QString,QVariant)));
 }
 

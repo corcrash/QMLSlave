@@ -26,3 +26,9 @@ HEADERS += \
     connection.h \
     theaplication.h \
     messagehandler.h
+
+OTHER_FILES += \
+    qml/main.qml \
+    qml/altview.qml
+
+RESOURCES +=
