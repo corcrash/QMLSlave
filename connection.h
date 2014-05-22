@@ -21,7 +21,7 @@ public:
     bool sendQMLCode(const QString &QMLCode);
 
 signals:
-    void newEventMessage(const QString &message);
+    void newEventMessage(const QString &identifier, const QVariant &data);
     void newQMLCodeRequest();
 
 private slots:

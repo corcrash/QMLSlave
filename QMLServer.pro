@@ -18,9 +18,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     qmlserver.cpp \
     connection.cpp \
-    theaplication.cpp
+    theaplication.cpp \
+    messagehandler.cpp
 
 HEADERS += \
     qmlserver.h \
     connection.h \
-    theaplication.h
+    theaplication.h \
+    messagehandler.h

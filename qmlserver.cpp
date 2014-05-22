@@ -3,7 +3,7 @@
 QMLServer::QMLServer(QObject *parent) :
     QTcpServer(parent)
 {
-    connect(&this->connection, SIGNAL(newEventMessage(QString)), this, SLOT(transferEventMessage(QString)));
+    connect(&this->connection, SIGNAL(newEventMessage(QString,QVariant)), this, SLOT(transferEventMessage(QString,QVariant)));
     connect(&this->connection, SIGNAL(newQMLCodeRequest()), this, SLOT(QMLCodeRequest()));
 }
 
@@ -25,7 +25,7 @@ void QMLServer::QMLCodeRequest()
     emit newQMLCodeRequest();
 }
 
-void QMLServer::transferEventMessage(const QString &message)
+void QMLServer::transferEventMessage(const QString &identifier, const QVariant &message)
 {
-    emit newEventMessage(message);
+    emit newEventMessage(identifier, message);
 }

@@ -22,11 +22,11 @@ protected:
 
 signals:
     void newQMLCodeRequest();
-    void newEventMessage(const QString &message);
+    void newEventMessage(const QString &identifier, const QVariant &message);
 
 private slots:
     void QMLCodeRequest();
-    void transferEventMessage(const QString &message);
+    void transferEventMessage(const QString &identifier, const QVariant &message);
 
 public slots:
 

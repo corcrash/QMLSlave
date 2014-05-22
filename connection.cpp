@@ -38,8 +38,6 @@ bool Connection::sendQMLCode(const QString &QMLCode)
 
     QString code = "{ \"type\" : \"QMLCode\", \"data\": \"" + QMLCode + "\" }";
 
-    qDebug() << "Sending code: " << code;
-
     QByteArray data = code.toUtf8();
 
     if(this->write(data) == data.size())
@@ -50,22 +48,16 @@ bool Connection::sendQMLCode(const QString &QMLCode)
 
 void Connection::processReadyRead()
 {
-    qDebug() << "Reading data!";
     if(this->readDataIntoBuffer() <= 0)
         return;
-
-    qDebug() << "Recieved data: " << this->buffer;
 
     QJsonDocument tempDocument = QJsonDocument::fromJson(this->buffer);
 
     QJsonObject recievedData = tempDocument.object();
 
-    qDebug() << tempDocument;
-
     if(recievedData["type"].toString() == "eventMessage")
     {
-        emit newEventMessage(recievedData["data"].toString());
-
+        emit newEventMessage(recievedData["identifier"].toString(), recievedData["data"].toString());
         this->buffer.clear();
         return;
     }
@@ -73,8 +65,9 @@ void Connection::processReadyRead()
     if(recievedData["type"].toString() == "QMLRequest")
     {
         emit newQMLCodeRequest();
-        qDebug() << this->buffer;
         this->buffer.clear();
         return;
     }
+
+    this->buffer.clear();
 }
